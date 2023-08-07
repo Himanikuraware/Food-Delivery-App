@@ -13,7 +13,7 @@ const cartReducer = (state, action) => {
 
     //This will return true if the item is already in the cart and returns its index number and false if the item is not present in the cart.
     const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id == action.item.id
+      (item) => item.id === action.item.id
     );
 
     const existingCartItem = state.items[existingCartItemIndex];
@@ -37,7 +37,7 @@ const cartReducer = (state, action) => {
 
   if (action.type === "REMOVE") {
     const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id == action.id
+      (item) => item.id === action.id
     );
     const existingItem = state.items[existingCartItemIndex];
     const updatedTotalAmount =
@@ -57,6 +57,10 @@ const cartReducer = (state, action) => {
     };
   }
 
+  if (action.type === "CLEAR") {
+    return defaultState;
+  }
+
   return defaultState;
 };
 const CartProvider = ({ children, ...props }) => {
@@ -70,11 +74,15 @@ const CartProvider = ({ children, ...props }) => {
   const removeItemFromCart = (id) => {
     dispatchCartActions({ type: "REMOVE", id: id });
   };
+  const clearCartHandler = () => {
+    dispatchCartActions({ type: "CLEAR" });
+  };
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCart,
+    clearCart: clearCartHandler,
   };
   return (
     <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
